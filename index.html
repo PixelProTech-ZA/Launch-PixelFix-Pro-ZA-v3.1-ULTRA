@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PixelFix Pro">
+<meta name="description" content="PixelFix Pro ZA — Photo Resize & ID Photo Toolkit by PixelProTech Solutions">
+<title>PixelFix Pro ZA — PixelProTech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --void:#0A0A0F;--panel:#12121C;--surface:#1A1A2E;--elevated:#232338;
+  --purple:#7B2FFF;--purple-g:rgba(123,47,255,.16);--purple-g2:rgba(123,47,255,.42);
+  --teal:#00D4AA;--teal-g:rgba(0,212,170,.14);
+  --amber:#FFB020;--amber-g:rgba(255,176,32,.14);
+  --red:#FF3B5C;--red-g:rgba(255,59,92,.14);
+  --white:#FFFFFF;--t2:#9797B5;--t3:#5E5E80;
+  --b1:rgba(255,255,255,.07);--b2:rgba(255,255,255,.12);--bp:rgba(123,47,255,.35);
+  --orb:'Orbitron',sans-serif;--raj:'Rajdhani',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:12px;--r2:18px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--white);font-family:var(--raj);min-height:100vh;-webkit-font-smoothing:antialiased}
+button,input{font-family:inherit;color:inherit}
+.mono{font-family:var(--mono)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+/* ============ HEADER ============ */
+header.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 24px;border-bottom:1px solid var(--b1);
+  background:linear-gradient(180deg,rgba(123,47,255,.06),transparent);
+  position:sticky;top:0;z-index:100;backdrop-filter:blur(14px);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--purple),#5A1FCC);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 20px var(--purple-g2)}
+.brand-mark svg{width:24px;height:24px}
+.brand-text h1{font-family:var(--orb);font-size:19px;font-weight:900;letter-spacing:1.5px;line-height:1.1}
+.brand-text h1 span{color:var(--teal)}
+.brand-text p{font-size:11px;color:var(--t2);letter-spacing:.5px;margin-top:2px}
+.header-badges{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:20px;border:1px solid var(--b2);background:var(--surface);font-family:var(--mono);font-size:11px;letter-spacing:1px;white-space:nowrap}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.badge.ver{color:var(--purple);border-color:var(--bp)}
+@media(max-width:640px){.brand-text p{display:none}.header-badges .badge span.bt{display:none}}
+
+/* ============ TOOL NAV (large cards) ============ */
+nav.toolnav{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px 24px;max-width:1400px;margin:0 auto}
+@media(max-width:900px){nav.toolnav{grid-template-columns:1fr;padding:16px}}
+.toolcard{
+  display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:var(--r2);
+  border:1.5px solid var(--b1);background:var(--panel);cursor:pointer;text-align:left;
+  transition:border-color .18s,background .18s,transform .18s;
+}
+.toolcard:hover{border-color:var(--b2);transform:translateY(-1px)}
+.toolcard.active{border-color:var(--purple);background:linear-gradient(135deg,var(--purple-g),transparent);box-shadow:0 0 0 1px var(--bp) inset}
+.toolcard .ti-icon{width:50px;height:50px;border-radius:14px;background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.toolcard.active .ti-icon{background:var(--purple);box-shadow:0 4px 16px var(--purple-g2)}
+.toolcard .ti-icon i{font-size:24px}
+.toolcard-text h3{font-family:var(--orb);font-size:14px;font-weight:700;letter-spacing:1px;margin-bottom:3px}
+.toolcard-text p{font-size:12.5px;color:var(--t2);line-height:1.3}
+
+/* ============ WORKSPACE LAYOUT ============ */
+.toolview{display:none;max-width:1400px;margin:0 auto;padding:0 24px 60px}
+.toolview.active{display:block}
+.workspace-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:20px;align-items:start}
+@media(max-width:1050px){.workspace-grid{grid-template-columns:1fr}}
+
+/* ============ IMAGE STAGE (large) ============ */
+.stage-card{background:var(--panel);border:1px solid var(--b1);border-radius:var(--r2);overflow:hidden;position:sticky;top:96px}
+@media(max-width:1050px){.stage-card{position:static}}
+.stage-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--b1)}
+.stage-head .lbl{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--t2)}
+.stage-toggle{display:flex;gap:4px;background:var(--surface);border-radius:8px;padding:3px}
+.stage-toggle button{padding:6px 14px;border:none;background:none;border-radius:6px;font-size:11px;font-family:var(--mono);letter-spacing:.5px;cursor:pointer;color:var(--t2)}
+.stage-toggle button.on{background:var(--purple);color:#fff}
+.stage-body{position:relative;min-height:420px;max-height:640px;display:flex;align-items:center;justify-content:center;background:
+  repeating-conic-gradient(#15151f 0% 25%,#191925 0% 50%) 50%/22px 22px;overflow:hidden}
+.stage-body canvas{max-width:100%;max-height:640px;display:none;object-fit:contain}
+.dropzone{width:100%;height:100%;min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer;padding:30px;text-align:center}
+.dropzone.drag{background:var(--purple-g)}
+.dz-icon{width:84px;height:84px;border-radius:22px;background:var(--surface);border:1.5px dashed var(--b2);display:flex;align-items:center;justify-content:center}
+.dz-icon i{font-size:38px;color:var(--purple)}
+.dropzone h3{font-family:var(--orb);font-size:18px;letter-spacing:1px}
+.dropzone .fmt{font-family:var(--mono);font-size:11px;color:var(--t2);letter-spacing:1px}
+.dropzone .tap{font-size:12px;color:var(--t3)}
+.dz-btns{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;justify-content:center}
+.dz-btn{padding:11px 20px;border-radius:10px;border:1px solid var(--b2);background:var(--surface);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px;min-height:44px}
+.dz-btn.primary{background:linear-gradient(135deg,var(--purple),#5A1FCC);border-color:transparent}
+.stage-foot{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-top:1px solid var(--b1);flex-wrap:wrap;gap:10px}
+.zoom-ctrl{display:flex;align-items:center;gap:6px}
+.zoom-ctrl button{width:34px;height:34px;border-radius:8px;border:1px solid var(--b2);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.zoom-ctrl button i{font-size:16px;color:var(--t2);line-height:1}
+.zoom-ctrl span{font-family:var(--mono);font-size:12px;color:var(--t2);min-width:44px;text-align:center}
+.guide-overlay{position:absolute;inset:0;pointer-events:none;display:none}
+.guide-overlay.on{display:block}
+.guide-overlay .cross{position:absolute;top:50%;left:50%;width:30px;height:30px;transform:translate(-50%,-50%);border:1.5px solid rgba(0,212,170,.7);border-radius:50%}
+.guide-overlay .cross::before,.guide-overlay .cross::after{content:'';position:absolute;background:rgba(0,212,170,.7)}
+.guide-overlay .cross::before{top:50%;left:-8px;right:-8px;height:1px;transform:translateY(-.5px)}
+.guide-overlay .cross::after{left:50%;top:-8px;bottom:-8px;width:1px;transform:translateX(-.5px)}
+.guide-overlay .safe{position:absolute;inset:12%;border:1px dashed rgba(255,176,32,.55);border-radius:8px}
+
+/* ============ CONTROL RAIL ============ */
+.rail{display:flex;flex-direction:column;gap:14px}
+.section-card{background:var(--panel);border:1px solid var(--b1);border-radius:var(--r2);padding:18px 20px}
+.section-head{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+.section-head h2{font-family:var(--orb);font-size:13.5px;letter-spacing:1.3px}
+.section-head .sub{font-size:11.5px;color:var(--t3)}
+.section-body{margin-top:12px}
+
+/* Preset tiles (large) */
+.preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:400px){.preset-grid{grid-template-columns:1fr}}
+.preset-tile{padding:14px;border-radius:12px;border:1.5px solid var(--b1);background:var(--surface);cursor:pointer;text-align:left;min-height:64px;transition:border-color .15s,background .15s}
+.preset-tile:hover{border-color:var(--b2)}
+.preset-tile.on{border-color:var(--teal);background:var(--teal-g)}
+.preset-tile .pt-name{font-size:13px;font-weight:700;display:block;margin-bottom:3px}
+.preset-tile .pt-spec{font-family:var(--mono);font-size:10.5px;color:var(--t2);letter-spacing:.3px}
+.notice{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--amber-g);border:1px solid rgba(255,176,32,.3);font-size:11.5px;line-height:1.55;color:#E8C878}
+.notice b{color:var(--amber);display:block;margin-bottom:3px;font-size:11.5px}
+.notice.info{background:rgba(0,212,170,.08);border-color:rgba(0,212,170,.28);color:#8FE0CE}
+.notice.info b{color:var(--teal)}
+
+/* Dimensions */
+.dim-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px}
+.field label{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:1px;color:var(--t2);margin-bottom:6px}
+.field .inp-wrap{position:relative}
+.field input[type=number],.field input[type=text]{width:100%;height:46px;padding:0 40px 0 12px;border-radius:10px;border:1.5px solid var(--b2);background:var(--surface);color:#fff;font-size:15px;font-weight:600}
+.field input:focus{border-color:var(--teal)}
+.field .unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:10px;color:var(--t3)}
+.toggle-row{display:flex;flex-direction:column;gap:8px}
+.toggle-btn{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:10px;background:var(--surface);border:1.5px solid var(--b1);cursor:pointer;min-height:44px}
+.toggle-btn .tlabel{font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:8px}
+.toggle-btn .tlabel small{display:block;font-weight:400;color:var(--t3);font-size:10.5px;margin-top:1px}
+.swtch{width:40px;height:22px;border-radius:11px;background:var(--elevated);position:relative;flex-shrink:0;transition:background .15s}
+.swtch::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#8a8aa5;transition:transform .15s,background .15s}
+.toggle-btn.on .swtch{background:var(--purple)}
+.toggle-btn.on .swtch::after{transform:translateX(18px);background:#fff}
+
+/* Print calc */
+.print-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
+.print-stat{background:var(--surface);border-radius:10px;padding:12px;text-align:center}
+.print-stat .pv{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--teal)}
+.print-stat .pl{font-size:10px;letter-spacing:1px;color:var(--t3);margin-top:3px}
+
+/* Sliders */
+.slider-row{margin-bottom:16px}
+.slider-row:last-child{margin-bottom:0}
+.slider-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.slider-top label{font-size:12.5px;font-weight:600}
+.slider-top .sv{font-family:var(--mono);font-size:12px;color:var(--teal);font-weight:600}
+input[type=range]{width:100%;height:34px;-webkit-appearance:none;background:transparent}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--elevated)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--purple);border:3px solid #fff;margin-top:-8px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--elevated)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--purple);border:3px solid #fff;cursor:pointer}
+.reset-mini{font-size:10.5px;color:var(--t3);text-decoration:underline;cursor:pointer;background:none;border:none;padding:4px}
+
+/* Format buttons */
+.fmt-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.fmt-btn{padding:14px 8px;border-radius:10px;border:1.5px solid var(--b2);background:var(--surface);font-family:var(--orb);font-size:12px;letter-spacing:1px;cursor:pointer;min-height:48px}
+.fmt-btn.on{background:var(--purple);border-color:transparent}
+
+/* Big action buttons */
+.btn-lg{width:100%;min-height:52px;border-radius:12px;border:none;font-family:var(--orb);font-size:13px;letter-spacing:1.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px}
+.btn-primary{background:linear-gradient(135deg,var(--purple),#5A1FCC);color:#fff;box-shadow:0 4px 20px var(--purple-g2)}
+.btn-ghost{background:var(--surface);color:#fff;border:1.5px solid var(--b2)}
+.btn-teal{background:linear-gradient(135deg,var(--teal),#00A583);color:#04140f}
+.btn-danger{background:var(--red-g);color:var(--red);border:1.5px solid rgba(255,59,92,.35)}
+.btn-lg:disabled{opacity:.4;cursor:not-allowed}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* Output panel */
+.out-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.out-stat{background:var(--surface);border-radius:10px;padding:12px}
+.out-stat .ol{font-family:var(--mono);font-size:9.5px;letter-spacing:1px;color:var(--t3)}
+.out-stat .ov{font-size:15px;font-weight:700;margin-top:3px}
+.ready-pill{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:20px;font-family:var(--mono);font-size:11px;letter-spacing:1px;margin-bottom:14px}
+.ready-pill.pass{background:var(--teal-g);color:var(--teal)}
+.ready-pill.wait{background:var(--surface);color:var(--t3)}
+
+/* Checklist */
+.check-list{display:flex;flex-direction:column;gap:8px}
+.check-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:var(--surface);font-size:12.5px}
+.check-item i{font-size:16px;flex-shrink:0}
+.check-item.pass i{color:var(--teal)}
+.check-item.warn i{color:var(--amber)}
+.check-item.act i{color:var(--red)}
+.check-item .cv{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--t3)}
+
+/* Processing overlay */
+.proc-ov{position:absolute;inset:0;background:rgba(10,10,15,.92);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:40;backdrop-filter:blur(4px)}
+.proc-ov.show{display:flex}
+.proc-ring{width:56px;height:56px;border:3px solid var(--b2);border-top-color:var(--purple);border-radius:50%;animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.proc-stage{font-family:var(--orb);font-size:13px;letter-spacing:1.5px;text-align:center;padding:0 20px}
+.proc-stagelist{display:flex;flex-direction:column;gap:5px;font-family:var(--mono);font-size:10.5px;color:var(--t3);align-items:flex-start}
+.proc-stagelist .ps{display:flex;align-items:center;gap:8px;opacity:.4}
+.proc-stagelist .ps.active{opacity:1;color:var(--teal)}
+.proc-stagelist .ps.done{opacity:.7;color:var(--t2)}
+
+/* Toast / export confirmation */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120%);background:var(--panel);border:1.5px solid var(--teal);border-radius:14px;padding:16px 22px;display:flex;align-items:center;gap:14px;z-index:9000;transition:transform .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 10px 40px rgba(0,0,0,.5);max-width:92vw}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast .ti{width:38px;height:38px;border-radius:10px;background:var(--teal-g);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.toast .ti i{color:var(--teal);font-size:19px}
+.toast-text b{font-family:var(--orb);font-size:12px;letter-spacing:1px;display:block}
+.toast-text span{font-size:11px;color:var(--t2);font-family:var(--mono)}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:9500;padding:20px}
+.modal-bg.show{display:flex}
+.modal-box{background:var(--panel);border:1.5px solid var(--b2);border-radius:var(--r2);padding:26px;max-width:380px;width:100%;text-align:center}
+.modal-box h3{font-family:var(--orb);font-size:15px;letter-spacing:1px;margin-bottom:10px}
+.modal-box p{font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:20px}
+.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* Error banner */
+.err-banner{display:none;padding:14px 16px;border-radius:10px;background:var(--red-g);border:1px solid rgba(255,59,92,.35);margin-bottom:14px}
+.err-banner.show{display:block}
+.err-banner b{color:var(--red);font-size:12.5px;display:block;margin-bottom:4px}
+.err-banner p{font-size:12px;color:#f0a8b5;line-height:1.5}
+
+/* Background lab specific */
+.bg-btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bg-opt{padding:14px;border-radius:10px;border:1.5px solid var(--b2);background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;min-height:70px}
+.bg-opt.on{border-color:var(--purple);background:var(--purple-g)}
+.bg-opt i{font-size:20px}
+.bg-opt span{font-size:11px;font-weight:600;letter-spacing:.3px}
+.bg-opt .sw-dot{width:20px;height:20px;border-radius:50%}
+
+/* Camera guides toggle row already covered by toggle-btn */
+.filt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.filt-btn{padding:10px 4px;border-radius:8px;border:1.5px solid var(--b2);background:var(--surface);font-size:10.5px;font-weight:700;letter-spacing:.5px;cursor:pointer;min-height:40px}
+.filt-btn.on{background:var(--purple);border-color:transparent}
+
+/* Footer */
+footer.pfoot{border-top:1px solid var(--b1);padding:30px 24px;text-align:center;margin-top:20px}
+footer.pfoot .fname{font-family:var(--orb);font-size:14px;letter-spacing:1.5px}
+footer.pfoot .fsub{font-size:12px;color:var(--t2);margin-top:6px}
+footer.pfoot .fmeta{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--t3)}
+footer.pfoot a{color:var(--teal);text-decoration:none}
+
+/* Splash (kept, simplified) */
+#splash{position:fixed;inset:0;z-index:9900;background:var(--void);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .6s,transform .6s}
+#splash.out{opacity:0;transform:scale(1.02);pointer-events:none}
+.sp-ring{width:64px;height:64px;border:2px solid var(--b2);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite}
+#splash h1{font-family:var(--orb);font-size:clamp(22px,6vw,40px);font-weight:900;letter-spacing:4px}
+#splash h1 span{color:var(--teal)}
+#splash p{font-family:var(--mono);font-size:11px;color:var(--t2);letter-spacing:2px}
+
+/* Mobile helpers */
+@media(max-width:640px){
+  .dim-row{grid-template-columns:1fr 1fr}
+  .dim-row .field:nth-child(3){grid-column:span 2}
+  .preset-grid{grid-template-columns:1fr 1fr}
+  .out-grid{grid-template-columns:1fr 1fr}
+  .fmt-row{grid-template-columns:1fr 1fr 1fr}
+  header.topbar{padding:12px 16px}
+  .toolview{padding:0 12px 40px}
+}
+input[type=color]{width:44px;height:44px;border-radius:10px;border:1.5px solid var(--b2);background:var(--surface);cursor:pointer;padding:3px}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="sp-ring"></div>
+  <h1>PIXEL<span>FIX</span></h1>
+  <p>PRO ZA · PIXELPROTECH SOLUTIONS</p>
+</div>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 16l4-6 3 4 3-5 6 7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="7" r="2" fill="#fff"/></svg>
+    </div>
+    <div class="brand-text">
+      <h1>PIXEL<span>FIX</span> PRO ZA</h1>
+      <p>PixelProTech Solutions · Gauteng</p>
+    </div>
+  </div>
+  <div class="header-badges">
+    <div class="badge"><span class="dot"></span><span class="bt">SYSTEM ONLINE</span></div>
+    <div class="badge ver">v3.2 ULTRA</div>
+  </div>
+</header>
+
+<nav class="toolnav" id="toolnav">
+  <button class="toolcard active" data-tool="edit" aria-pressed="true">
+    <div class="ti-icon"><i class="ti ti-photo-edit"></i></div>
+    <div class="toolcard-text"><h3>EDIT &amp; RESIZE</h3><p>Resize, crop and prepare your image</p></div>
+  </button>
+  <button class="toolcard" data-tool="bg" aria-pressed="false">
+    <div class="ti-icon"><i class="ti ti-layers-subtract"></i></div>
+    <div class="toolcard-text"><h3>BACKGROUND LAB</h3><p>Remove, replace and clean backgrounds</p></div>
+  </button>
+  <button class="toolcard" data-tool="camera" aria-pressed="false">
+    <div class="ti-icon"><i class="ti ti-camera"></i></div>
+    <div class="toolcard-text"><h3>CAMERA LAB</h3><p>Capture and prepare images directly</p></div>
+  </button>
+</nav>
+<!-- ============ TOOL: EDIT & RESIZE ============ -->
+<div class="toolview active" id="tool-edit">
+<div class="workspace-grid">
+
+  <!-- IMAGE STAGE -->
+  <div class="stage-card">
+    <div class="stage-head">
+      <span class="lbl">IMAGE WORKSPACE</span>
+      <div class="stage-toggle" role="group" aria-label="Compare original and output">
+        <button id="ed-tab-orig" aria-pressed="false">ORIGINAL</button>
+        <button id="ed-tab-out" class="on" aria-pressed="true">OUTPUT</button>
+      </div>
+    </div>
+    <div class="stage-body" id="ed-stagebody">
+      <div class="dropzone" id="ed-dropzone" tabindex="0" role="button" aria-label="Drop photo here or tap to browse">
+        <div class="dz-icon"><i class="ti ti-photo-plus"></i></div>
+        <h3>DROP PHOTO HERE</h3>
+        <p class="fmt">JPG · PNG · WEBP · BMP · GIF</p>
+        <p class="tap">or tap to browse</p>
+        <div class="dz-btns">
+          <button class="dz-btn primary" id="ed-browse-btn" type="button"><i class="ti ti-upload"></i>Browse Files</button>
+          <button class="dz-btn" id="ed-opencam-btn" type="button"><i class="ti ti-camera"></i>Open Camera</button>
+        </div>
+        <input type="file" id="ed-file" accept="image/jpeg,image/png,image/webp,image/bmp,image/gif" class="sr-only">
+      </div>
+      <canvas id="ed-canvas"></canvas>
+      <div class="guide-overlay" id="ed-guides"><div class="cross"></div><div class="safe"></div></div>
+    </div>
+    <div class="err-banner" id="ed-errbanner"><b id="ed-err-title">PIXELFIX COULD NOT PROCESS THIS IMAGE</b><p id="ed-err-msg"></p></div>
+    <div class="stage-foot">
+      <div class="zoom-ctrl">
+        <button id="ed-zoomout" type="button" aria-label="Zoom out"><i class="ti ti-zoom-out"></i></button>
+        <span id="ed-zoomval">100%</span>
+        <button id="ed-zoomin" type="button" aria-label="Zoom in"><i class="ti ti-zoom-in"></i></button>
+        <button id="ed-fit" type="button" aria-label="Fit to screen"><i class="ti ti-arrows-diagonal"></i></button>
+      </div>
+      <span class="mono" id="ed-status" style="font-size:11px;color:var(--t2)"></span>
+    </div>
+  </div>
+
+  <!-- CONTROL RAIL -->
+  <div class="rail">
+
+    <div class="section-card">
+      <div class="section-head"><h2>PHOTO PRESETS</h2></div>
+      <p class="sub" style="margin-bottom:12px">Instant dimensions for common destinations</p>
+      <div class="section-body">
+        <div class="preset-grid" id="ed-presets" role="group" aria-label="Photo presets"></div>
+        <div class="notice" id="ed-said-notice">
+          <b>SA ID / PASSPORT PHOTO</b>
+          35 × 45mm specification. Final acceptance depends on the complete official photo requirements, including background, lighting, framing and recency — size alone does not guarantee acceptance. See dha.gov.za for the full spec.
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><h2>DIMENSIONS</h2></div>
+      <div class="section-body">
+        <div class="dim-row">
+          <div class="field"><label for="ed-w">WIDTH</label><div class="inp-wrap"><input type="number" id="ed-w" value="800" min="1" max="8000"><span class="unit">PX</span></div></div>
+          <div class="field"><label for="ed-h">HEIGHT</label><div class="inp-wrap"><input type="number" id="ed-h" value="800" min="1" max="8000"><span class="unit">PX</span></div></div>
+          <div class="field"><label for="ed-dpi">DPI</label><div class="inp-wrap"><input type="number" id="ed-dpi" value="300" min="72" max="1200"><span class="unit">DPI</span></div></div>
+        </div>
+        <div class="toggle-row">
+          <button class="toggle-btn on" id="ed-lock" type="button" aria-pressed="true"><span class="tlabel"><i class="ti ti-lock"></i> Lock Ratio<small>Keep width/height proportional</small></span><span class="swtch"></span></button>
+          <button class="toggle-btn on" id="ed-autocrop" type="button" aria-pressed="true"><span class="tlabel"><i class="ti ti-crop"></i> Auto Center Crop<small>Fill target exactly, crop overflow</small></span><span class="swtch"></span></button>
+          <button class="toggle-btn" id="ed-keepratio" type="button" aria-pressed="false"><span class="tlabel"><i class="ti ti-photo"></i> Keep Original Ratio<small>Letterbox with background colour</small></span><span class="swtch"></span></button>
+        </div>
+        <div class="print-grid">
+          <div class="print-stat"><div class="pv" id="ed-printw">2.67"</div><div class="pl">PRINT WIDTH</div></div>
+          <div class="print-stat"><div class="pv" id="ed-printh">2.67"</div><div class="pl">PRINT HEIGHT</div></div>
+          <div class="print-stat"><div class="pv" id="ed-printdpi">300</div><div class="pl">DPI</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><h2>BACKGROUND FILL</h2><span class="sub">used when letterboxing</span></div>
+      <div class="section-body" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center" id="ed-bgsw">
+        <div class="sw-opt-wrap"></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><h2>IMAGE ENHANCEMENT</h2><button class="reset-mini" id="ed-enh-reset" type="button">RESET ALL</button></div>
+      <div class="section-body">
+        <div class="slider-row">
+          <div class="slider-top"><label>Sharpen Amount</label><span class="sv" id="ed-sharp-v">0%</span></div>
+          <input type="range" id="ed-sharp" min="0" max="100" value="0">
+        </div>
+        <div class="slider-row">
+          <div class="slider-top"><label>Sharpen Radius</label><span class="sv" id="ed-sharpr-v">1PX</span></div>
+          <input type="range" id="ed-sharpr" min="1" max="5" value="1">
+        </div>
+        <div class="slider-row">
+          <div class="slider-top"><label>Brightness</label><span class="sv" id="ed-bright-v">100%</span></div>
+          <input type="range" id="ed-bright" min="40" max="180" value="100">
+        </div>
+        <div class="slider-row">
+          <div class="slider-top"><label>Contrast</label><span class="sv" id="ed-contr-v">100%</span></div>
+          <input type="range" id="ed-contr" min="40" max="180" value="100">
+        </div>
+        <div class="slider-row">
+          <div class="slider-top"><label>Saturation</label><span class="sv" id="ed-sat-v">100%</span></div>
+          <input type="range" id="ed-sat" min="0" max="200" value="100">
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><h2>EXPORT FORMAT</h2></div>
+      <div class="section-body">
+        <div class="fmt-row">
+          <button class="fmt-btn on" data-fmt="image/jpeg" type="button">JPG</button>
+          <button class="fmt-btn" data-fmt="image/png" type="button">PNG</button>
+          <button class="fmt-btn" data-fmt="image/webp" type="button">WEBP</button>
+        </div>
+        <div class="slider-row" id="ed-qual-row">
+          <div class="slider-top"><label>Quality</label><span class="sv" id="ed-qual-v">92%</span></div>
+          <input type="range" id="ed-qual" min="10" max="100" value="92">
+        </div>
+        <p class="sub" id="ed-qual-note" style="display:none">PNG is lossless — quality does not apply.</p>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><h2>OUTPUT CHECK</h2></div>
+      <div class="section-body">
+        <p class="sub" style="margin-bottom:10px">PixelFix technical check — confirms the exported file matches your settings. It does not guarantee acceptance by a third-party organisation.</p>
+        <div class="check-list" id="ed-checklist"></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><h2>PHOTO READINESS</h2></div>
+      <div class="section-body">
+        <div id="ed-ready-pill" class="ready-pill wait"><i class="ti ti-clock"></i> AWAITING IMAGE</div>
+        <div class="check-list" id="ed-readylist"></div>
+        <p class="sub" style="margin-top:10px">Automated technical quality check, not an official acceptance guarantee.</p>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><h2>OUTPUT</h2></div>
+      <div class="section-body">
+        <div class="out-grid">
+          <div class="out-stat"><div class="ol">SIZE</div><div class="ov" id="ed-out-size">—</div></div>
+          <div class="out-stat"><div class="ol">DIMENSIONS</div><div class="ov" id="ed-out-dims">—</div></div>
+          <div class="out-stat"><div class="ol">FORMAT</div><div class="ov" id="ed-out-fmt">—</div></div>
+          <div class="out-stat"><div class="ol">PRINT SIZE</div><div class="ov" id="ed-out-print">—</div></div>
+        </div>
+        <div class="btn-row" style="margin-bottom:10px">
+          <button class="btn-lg btn-primary" id="ed-process" type="button" disabled><i class="ti ti-bolt"></i>PROCESS</button>
+          <button class="btn-lg btn-teal" id="ed-export" type="button" disabled><i class="ti ti-download"></i>EXPORT</button>
+        </div>
+        <button class="btn-lg btn-danger" id="ed-reset" type="button" disabled><i class="ti ti-refresh"></i>RESET PROJECT</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="proc-ov" id="ed-procov">
+  <div class="proc-ring"></div>
+  <div class="proc-stage" id="ed-procstage">PIXELFIX PROCESSING</div>
+  <div class="proc-stagelist" id="ed-stagelist"></div>
+</div>
+</div>
+<!-- ============ TOOL: BACKGROUND LAB ============ -->
+<div class="toolview" id="tool-bg">
+<div class="workspace-grid">
+
+  <div class="stage-card">
+    <div class="stage-head">
+      <span class="lbl">BACKGROUND LAB · EDGE DETECTION</span>
+      <div class="stage-toggle" role="group" aria-label="Compare original and output">
+        <button id="bg-tab-orig" aria-pressed="false">ORIGINAL</button>
+        <button id="bg-tab-out" class="on" aria-pressed="true">OUTPUT</button>
+      </div>
+    </div>
+    <div class="stage-body" id="bg-stagebody">
+      <div class="dropzone" id="bg-dropzone" tabindex="0" role="button" aria-label="Drop photo here or tap to browse">
+        <div class="dz-icon"><i class="ti ti-layers-subtract"></i></div>
+        <h3>DROP PHOTO HERE</h3>
+        <p class="fmt">PNG RECOMMENDED · BEST ON PLAIN BACKGROUNDS</p>
+        <p class="tap">or tap to browse</p>
+        <div class="dz-btns"><button class="dz-btn primary" id="bg-browse-btn" type="button"><i class="ti ti-upload"></i>Browse Files</button></div>
+        <input type="file" id="bg-file" accept="image/jpeg,image/png,image/webp,image/bmp" class="sr-only">
+      </div>
+      <canvas id="bg-canvas"></canvas>
+    </div>
+    <div class="err-banner" id="bg-errbanner"><b>PIXELFIX COULD NOT PROCESS THIS IMAGE</b><p id="bg-err-msg"></p></div>
+  </div>
+
+  <div class="rail">
+    <div class="section-card">
+      <div class="notice info">
+        <b>HOW THIS WORKS</b>
+        This tool removes background by comparing every pixel to the colours sampled around the photo's edges — it is edge/colour-detection, not an AI subject-segmentation model. It works well on plain, evenly-lit backgrounds (studio shots, ID-style photos, product shots on a table). It will struggle on busy, gradient, or low-contrast backgrounds — that's a real limitation of this technique, not a bug.
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><h2>SENSITIVITY</h2></div>
+      <div class="section-body">
+        <div class="slider-row" style="margin-bottom:0">
+          <div class="slider-top"><label>Threshold</label><span class="sv" id="bg-thresh-v">40</span></div>
+          <input type="range" id="bg-thresh" min="5" max="150" value="40">
+        </div>
+        <p class="sub" style="margin-top:6px">LOW = precise edge · HIGH = aggressive removal</p>
+        <div class="slider-row" style="margin-top:14px;margin-bottom:0">
+          <div class="slider-top"><label>Edge Softness</label><span class="sv" id="bg-feather-v">0PX</span></div>
+          <input type="range" id="bg-feather" min="0" max="8" value="0">
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><h2>NEW BACKGROUND</h2></div>
+      <div class="section-body">
+        <div class="bg-btn-grid">
+          <button class="bg-opt on" data-bgmode="transparent" type="button"><i class="ti ti-checkerboard"></i><span>TRANSPARENT</span></button>
+          <button class="bg-opt" data-bgmode="white" type="button"><i class="ti ti-square-rounded"></i><span>WHITE</span></button>
+          <button class="bg-opt" data-bgmode="black" type="button"><i class="ti ti-square-rounded-filled"></i><span>BLACK</span></button>
+          <button class="bg-opt" data-bgmode="custom" type="button"><input type="color" id="bg-custom-color" value="#1E3A6E"><span>CUSTOM COLOR</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><h2>OUTPUT</h2></div>
+      <div class="section-body">
+        <div class="out-grid">
+          <div class="out-stat"><div class="ol">SIZE</div><div class="ov" id="bg-out-size">—</div></div>
+          <div class="out-stat"><div class="ol">DIMENSIONS</div><div class="ov" id="bg-out-dims">—</div></div>
+        </div>
+        <div class="btn-row" style="margin-bottom:10px">
+          <button class="btn-lg btn-primary" id="bg-process" type="button" disabled><i class="ti ti-wand"></i>REMOVE BACKGROUND</button>
+          <button class="btn-lg btn-teal" id="bg-export" type="button" disabled><i class="ti ti-download"></i>EXPORT PNG</button>
+        </div>
+        <button class="btn-lg btn-danger" id="bg-reset" type="button" disabled><i class="ti ti-refresh"></i>RESET PROJECT</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="proc-ov" id="bg-procov">
+  <div class="proc-ring"></div>
+  <div class="proc-stage" id="bg-procstage">PIXELFIX PROCESSING</div>
+</div>
+</div>
+
+<!-- ============ TOOL: CAMERA LAB ============ -->
+<div class="toolview" id="tool-camera">
+<div class="workspace-grid">
+
+  <div class="stage-card">
+    <div class="stage-head">
+      <span class="lbl">CAMERA LAB</span>
+      <button class="dz-btn" id="cam-switch-btn" type="button" style="display:none;padding:6px 12px;min-height:34px"><i class="ti ti-camera-rotate"></i></button>
+    </div>
+    <div class="stage-body" id="cam-stagebody" style="background:#000">
+      <div class="dropzone" id="cam-startzone">
+        <div class="dz-icon"><i class="ti ti-camera"></i></div>
+        <h3>CAMERA LAB</h3>
+        <p class="fmt">CAPTURE A PHOTO DIRECTLY IN YOUR BROWSER</p>
+        <div class="dz-btns"><button class="dz-btn primary" id="cam-start-btn" type="button"><i class="ti ti-player-play"></i>Start Camera</button></div>
+      </div>
+      <video id="cam-video" autoplay playsinline muted style="display:none;max-width:100%;max-height:640px"></video>
+      <canvas id="cam-canvas" style="display:none"></canvas>
+      <div class="guide-overlay on" id="cam-guides"><div class="cross"></div><div class="safe"></div></div>
+    </div>
+    <div class="err-banner" id="cam-errbanner"><b>CAMERA UNAVAILABLE</b><p id="cam-err-msg"></p></div>
+  </div>
+
+  <div class="rail">
+    <div class="section-card">
+      <div class="section-head"><h2>LIVE FILTERS</h2></div>
+      <div class="section-body">
+        <div class="filt-grid" id="cam-filters">
+          <button class="filt-btn on" data-f="none" type="button">NORMAL</button>
+          <button class="filt-btn" data-f="grayscale(100%)" type="button">B&amp;W</button>
+          <button class="filt-btn" data-f="sepia(100%)" type="button">SEPIA</button>
+          <button class="filt-btn" data-f="saturate(180%) contrast(110%)" type="button">VIVID</button>
+        </div>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-head"><h2>ADJUSTMENTS</h2></div>
+      <div class="section-body">
+        <div class="slider-row"><div class="slider-top"><label>Brightness</label><span class="sv" id="cam-bright-v">100%</span></div><input type="range" id="cam-bright" min="50" max="150" value="100"></div>
+        <div class="slider-row"><div class="slider-top"><label>Contrast</label><span class="sv" id="cam-contr-v">100%</span></div><input type="range" id="cam-contr" min="50" max="150" value="100"></div>
+        <div class="slider-row"><div class="slider-top"><label>Saturation</label><span class="sv" id="cam-sat-v">100%</span></div><input type="range" id="cam-sat" min="0" max="200" value="100"></div>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-head"><h2>OUTPUT PRESET</h2></div>
+      <div class="section-body"><div class="preset-grid" id="cam-presets"></div></div>
+    </div>
+    <div class="section-card">
+      <div class="section-head"><h2>GUIDES</h2></div>
+      <div class="section-body toggle-row">
+        <button class="toggle-btn on" id="cam-guide-toggle" type="button" aria-pressed="true"><span class="tlabel"><i class="ti ti-focus-2"></i> Framing Guide<small>Center cross + safe area</small></span><span class="swtch"></span></button>
+        <button class="toggle-btn" id="cam-mirror-toggle" type="button" aria-pressed="false"><span class="tlabel"><i class="ti ti-flip-horizontal"></i> Mirror Preview<small>Flip horizontally</small></span><span class="swtch"></span></button>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-head"><h2>CAPTURE</h2></div>
+      <div class="section-body">
+        <button class="btn-lg btn-primary" id="cam-snap-btn" type="button" disabled style="margin-bottom:10px"><i class="ti ti-camera"></i>CAPTURE PHOTO</button>
+        <div class="btn-row" style="margin-bottom:10px">
+          <button class="btn-lg btn-ghost" id="cam-retake-btn" type="button" disabled><i class="ti ti-refresh"></i>RETAKE</button>
+          <button class="btn-lg btn-ghost" id="cam-stop-btn" type="button" disabled><i class="ti ti-player-stop"></i>STOP</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn-lg btn-teal" id="cam-save-btn" type="button" disabled><i class="ti ti-download"></i>SAVE PHOTO</button>
+          <button class="btn-lg btn-primary" id="cam-send-btn" type="button" disabled><i class="ti ti-arrow-right"></i>EDIT THIS PHOTO</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer class="pfoot">
+  <div class="fname">PIXEL<span style="color:var(--teal)">FIX</span> PRO ZA</div>
+  <div class="fsub">PixelProTech Solutions · JHB · PTA · GAUTENG</div>
+  <div class="fmeta"><span><span class="dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--teal);margin-right:5px"></span>SYSTEM ONLINE</span><span>·</span><a href="mailto:pixelprotechsolutions@gmail.com">pixelprotechsolutions@gmail.com</a></div>
+</footer>
+
+<div class="toast" id="toast"><div class="ti"><i class="ti ti-circle-check"></i></div><div class="toast-text"><b id="toast-title">EXPORTED</b><span id="toast-sub"></span></div></div>
+
+<div class="modal-bg" id="reset-modal">
+  <div class="modal-box">
+    <h3>RESET CURRENT PROJECT?</h3>
+    <p>This clears your loaded photo and all adjustments in this tool. This can't be undone.</p>
+    <div class="modal-btns">
+      <button class="btn-lg btn-ghost" id="reset-cancel" type="button">CANCEL</button>
+      <button class="btn-lg btn-danger" id="reset-confirm" type="button">RESET</button>
+    </div>
+  </div>
+</div>
+
+</body>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const $$=sel=>document.querySelectorAll(sel);
+
+/* ============ SPLASH ============ */
+window.addEventListener('load',()=>setTimeout(()=>$('splash').classList.add('out'),650));
+
+/* ============ TOOL NAV ============ */
+$$('.toolcard').forEach(card=>{
+  card.addEventListener('click',()=>switchTool(card.dataset.tool));
+});
+function switchTool(tool){
+  $$('.toolcard').forEach(c=>{const on=c.dataset.tool===tool;c.classList.toggle('active',on);c.setAttribute('aria-pressed',on)});
+  $$('.toolview').forEach(v=>v.classList.remove('active'));
+  $('tool-'+tool).classList.add('active');
+}
+
+/* ============ TOAST ============ */
+function showToast(title,sub){
+  $('toast-title').textContent=title;$('toast-sub').textContent=sub;
+  const t=$('toast');t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),4200);
+}
+
+/* ============ RESET MODAL (shared) ============ */
+let pendingReset=null;
+function askReset(cb){pendingReset=cb;$('reset-modal').classList.add('show')}
+$('reset-cancel').addEventListener('click',()=>{$('reset-modal').classList.remove('show');pendingReset=null});
+$('reset-confirm').addEventListener('click',()=>{$('reset-modal').classList.remove('show');if(pendingReset)pendingReset();pendingReset=null});
+
+/* ============ HELPERS ============ */
+function fmtBytes(b){if(b<1024)return b+' B';if(b<1048576)return Math.round(b/1024)+' KB';return(b/1048576).toFixed(1)+' MB'}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+const ALLOWED_TYPES=['image/jpeg','image/png','image/webp','image/bmp','image/gif'];
+const MAX_FILE_MB=35;
+
+/** Validates and decodes a File into an <img>. Resolves {img,file} or
+    rejects {title,msg} with a human-readable explanation — never a raw
+    JS error — matching PIXELFIX's "no exposed stack traces" requirement. */
+function loadImageFile(file){
+  return new Promise((resolve,reject)=>{
+    if(!file) return reject({title:'NO FILE SELECTED',msg:'Choose a photo to continue.'});
+    if(!ALLOWED_TYPES.includes(file.type) && !/\.(jpe?g|png|webp|bmp|gif)$/i.test(file.name)){
+      return reject({title:'UNSUPPORTED FILE TYPE',msg:'PixelFix supports JPG, PNG, WEBP, BMP and GIF. Try converting your file to one of these formats.'});
+    }
+    if(file.size > MAX_FILE_MB*1024*1024){
+      return reject({title:'FILE TOO LARGE',msg:'This file is '+fmtBytes(file.size)+'. PixelFix processes images locally in your browser, so very large files ('+MAX_FILE_MB+'MB+) can be unreliable. Try a smaller export from your camera app first.'});
+    }
+    const url=URL.createObjectURL(file);
+    const img=new Image();
+    img.onload=()=>{
+      if(!img.naturalWidth||!img.naturalHeight){URL.revokeObjectURL(url);return reject({title:'PIXELFIX COULD NOT PROCESS THIS IMAGE',msg:'The file loaded but has no visible image data. It may be corrupted.'})}
+      resolve({img,file,url});
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);reject({title:'PIXELFIX COULD NOT PROCESS THIS IMAGE',msg:'The image format could not be decoded by this browser. Try JPG, PNG or WEBP.'})};
+    img.src=url;
+  });
+}
+function showErr(bannerId,titleId,msgId,err){
+  if(titleId)$(titleId).textContent=err.title;
+  $(msgId).textContent=err.msg;
+  $(bannerId).classList.add('show');
+}
+function hideErr(bannerId){$(bannerId).classList.remove('show')}
+
+function drawToCanvas(cv,src,w,h,bg,maxH){
+  const boxW=cv.parentElement.clientWidth||640,boxH=maxH||420;
+  const sc=Math.min(boxW/w,boxH/h,1);
+  cv.width=Math.max(1,Math.round(w*sc));cv.height=Math.max(1,Math.round(h*sc));
+  const ctx=cv.getContext('2d');
+  if(bg){ctx.fillStyle=bg;ctx.fillRect(0,0,cv.width,cv.height)}else ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.drawImage(src,0,0,cv.width,cv.height);
+  cv.style.display='block';
+}
+
+/* ============ WEB WORKER — heavy pixel math off the main thread ============ */
+const pixelWorker=new Worker(URL.createObjectURL(new Blob([`
+self.onmessage=function(e){
+  const {task,id,buf,w,h}=e.data;
+  const d=new Uint8ClampedArray(buf);
+  function boxBlurAlpha(radius){
+    if(radius<=0)return;
+    const tmp=new Uint8ClampedArray(d.length);
+    const r=radius;
+    for(let y=0;y<h;y++){
+      let sum=0,cnt=0;
+      for(let x=-r;x<=r;x++){const xi=Math.min(w-1,Math.max(0,x));sum+=d[(y*w+xi)*4+3];cnt++}
+      for(let x=0;x<w;x++){
+        tmp[(y*w+x)*4+3]=Math.round(sum/cnt);
+        const addX=Math.min(w-1,x+r+1),remX=Math.max(0,x-r);
+        sum+=d[(y*w+addX)*4+3]-d[(y*w+remX)*4+3];
+      }
+    }
+    for(let x=0;x<w;x++){
+      let sum=0,cnt=0;
+      for(let y=-r;y<=r;y++){const yi=Math.min(h-1,Math.max(0,y));sum+=tmp[(yi*w+x)*4+3];cnt++}
+      for(let y=0;y<h;y++){
+        d[(y*w+x)*4+3]=Math.round(sum/cnt);
+        const addY=Math.min(h-1,y+r+1),remY=Math.max(0,y-r);
+        sum+=tmp[(addY*w+x)*4+3]-tmp[(remY*w+x)*4+3];
+      }
+    }
+  }
+  if(task==='adjustSharpen'){
+    const {bv,cv,sv,shAmt,shRadius}=e.data;
+    if(bv!==1||cv!==1||sv!==1){
+      for(let i=0;i<d.length;i+=4){
+        let r=d[i],g=d[i+1],b=d[i+2];
+        r=Math.min(255,Math.max(0,(r*bv-128)*cv+128));
+        g=Math.min(255,Math.max(0,(g*bv-128)*cv+128));
+        b=Math.min(255,Math.max(0,(b*bv-128)*cv+128));
+        const gray=.299*r+.587*g+.114*b;
+        d[i]=Math.min(255,Math.max(0,gray+(r-gray)*sv));
+        d[i+1]=Math.min(255,Math.max(0,gray+(g-gray)*sv));
+        d[i+2]=Math.min(255,Math.max(0,gray+(b-gray)*sv));
+      }
+    }
+    if(shAmt>0){
+      // Real radius-aware unsharp mask: blur (box, separable) then push
+      // original away from the blur by 'shAmt'. Radius genuinely changes
+      // the blur kernel size, unlike the old fixed 3x3 hack.
+      const rad=Math.max(1,Math.round(shRadius));
+      const blur=new Float32Array(d.length);
+      const tmp=new Float32Array(d.length);
+      for(let y=0;y<h;y++){
+        for(let c=0;c<3;c++){
+          let sum=0,cnt=0;
+          for(let x=-rad;x<=rad;x++){const xi=Math.min(w-1,Math.max(0,x));sum+=d[(y*w+xi)*4+c];cnt++}
+          for(let x=0;x<w;x++){
+            tmp[(y*w+x)*4+c]=sum/cnt;
+            const addX=Math.min(w-1,x+rad+1),remX=Math.max(0,x-rad);
+            sum+=d[(y*w+addX)*4+c]-d[(y*w+remX)*4+c];
+          }
+        }
+      }
+      for(let x=0;x<w;x++){
+        for(let c=0;c<3;c++){
+          let sum=0,cnt=0;
+          for(let y=-rad;y<=rad;y++){const yi=Math.min(h-1,Math.max(0,y));sum+=tmp[(yi*w+x)*4+c];cnt++}
+          for(let y=0;y<h;y++){
+            blur[(y*w+x)*4+c]=sum/cnt;
+            const addY=Math.min(h-1,y+rad+1),remY=Math.max(0,y-rad);
+            sum+=tmp[(addY*w+x)*4+c]-tmp[(remY*w+x)*4+c];
+          }
+        }
+      }
+      const amt=shAmt*2.2;
+      for(let i=0;i<d.length;i+=4){
+        for(let c=0;c<3;c++){
+          const v=d[i+c]+(d[i+c]-blur[i+c])*amt;
+          d[i+c]=Math.min(255,Math.max(0,Math.round(v)));
+        }
+      }
+    }
+  } else if(task==='bgremove'){
+    const {thresh,pts,feather}=e.data;
+    for(let i=0;i<d.length;i+=4){
+      for(let p=0;p<pts.length;p+=3){
+        const dr=d[i]-pts[p],dg=d[i+1]-pts[p+1],db=d[i+2]-pts[p+2];
+        if(Math.sqrt(dr*dr+dg*dg+db*db)<thresh){d[i+3]=0;break}
+      }
+    }
+    if(feather>0)boxBlurAlpha(feather);
+  }
+  postMessage({id,buf:d.buffer},[d.buffer]);
+};
+`],{type:'application/javascript'})));
+let pwSeq=0;
+function runOnWorker(task,extra,buf,w,h){
+  return new Promise(resolve=>{
+    const id=++pwSeq;
+    const onMsg=e=>{if(e.data.id!==id)return;pixelWorker.removeEventListener('message',onMsg);resolve(e.data.buf)};
+    pixelWorker.addEventListener('message',onMsg);
+    pixelWorker.postMessage({task,id,buf,w,h,...extra},[buf]);
+  });
+}
+
+/** Shows the processing overlay with real named stages (no fake %),
+    advancing each label only when that actual async step begins/ends. */
+function runStaged(ovId,stageId,listId,stages,steps){
+  const ov=$(ovId);ov.classList.add('show');
+  const listEl=listId?$(listId):null;
+  if(listEl){listEl.innerHTML=stages.map((s,i)=>`<div class="ps" data-i="${i}"><i class="ti ti-circle"></i>${s}</div>`).join('')}
+  function setStage(i){
+    if(stageId)$(stageId).textContent=stages[i]?stages[i].toUpperCase():'DONE';
+    if(listEl)[...listEl.children].forEach((el,j)=>{el.classList.toggle('active',j===i);el.classList.toggle('done',j<i)});
+  }
+  return (async()=>{
+    for(let i=0;i<steps.length;i++){setStage(i);await new Promise(r=>requestAnimationFrame(()=>setTimeout(r,20)));await steps[i]()}
+    setStage(stages.length);
+    await new Promise(r=>setTimeout(r,220));
+    ov.classList.remove('show');
+  })();
+}
+
+/* ══════════════════════════════════════════════════════════
+   EDIT & RESIZE
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  let origImg=null, origFile=null, procBlob=null, procUrl=null;
+  let selFmt='image/jpeg', selBg='#ffffff', aspLocked=true, activePreset=null;
+  let cropAreaFraction=1; // fraction of original area kept by auto-crop, for readiness check
+
+  const PRESETS=[
+    {id:'said',name:'SA ID / Passport',mm:[35,45],tag:'35×45mm'},
+    {id:'visa',name:'Visa (Embassy)',mm:[35,45],dpiOverride:600,tag:'35×45mm @600dpi'},
+    {id:'square',name:'Square',w:800,h:800,tag:'800×800'},
+    {id:'whatsapp',name:'WhatsApp',w:400,h:400,tag:'400×400'},
+    {id:'linkedin',name:'LinkedIn',w:800,h:800,tag:'800×800'},
+    {id:'instagram',name:'Instagram',w:1080,h:1080,tag:'1080×1080'},
+    {id:'fbprofile',name:'FB Profile',w:800,h:800,tag:'800×800'},
+    {id:'fbcover',name:'FB Cover',w:820,h:360,tag:'820×360'},
+  ];
+  const BG_SWATCHES=['#ffffff','#000000','#1E3A6E','#4B9CD3','#D0E8FF','#B5F23D'];
+
+  const cv=$('ed-canvas'),dz=$('ed-dropzone'),stagebody=$('ed-stagebody');
+  const fileInput=$('ed-file');
+  const iw=$('ed-w'),ih=$('ed-h'),idpi=$('ed-dpi');
+  const lockBtn=$('ed-lock'),autoBtn=$('ed-autocrop'),keepBtn=$('ed-keepratio');
+  const processBtn=$('ed-process'),exportBtn=$('ed-export'),resetBtn=$('ed-reset');
+  const statusEl=$('ed-status');
+
+  // ---- preset tiles ----
+  function pxForPreset(p){
+    if(p.mm){const dpi=p.dpiOverride||parseInt(idpi.value)||300;return{w:Math.round(p.mm[0]/25.4*dpi),h:Math.round(p.mm[1]/25.4*dpi)}}
+    return{w:p.w,h:p.h};
+  }
+  $('ed-presets').innerHTML=PRESETS.map(p=>`<button class="preset-tile" data-id="${p.id}" type="button"><span class="pt-name">${p.name}</span><span class="pt-spec">${p.tag}</span></button>`).join('');
+  $$('#ed-presets .preset-tile').forEach(t=>{
+    t.addEventListener('click',()=>{
+      $$('#ed-presets .preset-tile').forEach(x=>x.classList.remove('on'));
+      t.classList.add('on');
+      const p=PRESETS.find(x=>x.id===t.dataset.id);activePreset=p;
+      const px=pxForPreset(p);iw.value=px.w;ih.value=px.h;
+      if(p.dpiOverride)idpi.value=p.dpiOverride;
+      $('ed-said-notice').style.display=(p.id==='said'||p.id==='visa')?'block':'none';
+      updatePrintCalc();updateTechCheck();
+    });
+  });
+  $('ed-said-notice').style.display='none';
+
+  // ---- background swatches for letterbox fill ----
+  const swWrap=document.querySelector('#ed-bgsw .sw-opt-wrap');
+  swWrap.innerHTML=BG_SWATCHES.map((c,i)=>`<button type="button" class="bg-opt" style="min-height:44px;padding:8px 10px;flex-direction:row;gap:6px" data-c="${c}"><span class="sw-dot" style="background:${c};border:1px solid rgba(255,255,255,.25)"></span></button>`).join('')+
+    `<button type="button" class="bg-opt" style="min-height:44px;padding:6px 10px;flex-direction:row;gap:6px" id="ed-bgcustom-wrap"><input type="color" id="ed-bgcustom" value="#ffffff" style="width:26px;height:26px;padding:1px"></button>`;
+  document.querySelectorAll('#ed-bgsw .bg-opt[data-c]').forEach((b,i)=>{
+    if(i===0)b.classList.add('on');
+    b.addEventListener('click',()=>{document.querySelectorAll('#ed-bgsw .bg-opt').forEach(x=>x.classList.remove('on'));b.classList.add('on');selBg=b.dataset.c});
+  });
+  $('ed-bgcustom').addEventListener('input',e=>{document.querySelectorAll('#ed-bgsw .bg-opt').forEach(x=>x.classList.remove('on'));$('ed-bgcustom-wrap').classList.add('on');selBg=e.target.value});
+
+  // ---- dimensions / DPI / lock ----
+  function markCustomDims(){activePreset=null;$$('#ed-presets .preset-tile').forEach(x=>x.classList.remove('on'));$('ed-said-notice').style.display='none'}
+  iw.addEventListener('input',()=>{if(aspLocked&&origImg)ih.value=Math.round(parseInt(iw.value||1)*(origImg.height/origImg.width));markCustomDims();updatePrintCalc();updateTechCheck()});
+  ih.addEventListener('input',()=>{if(aspLocked&&origImg)iw.value=Math.round(parseInt(ih.value||1)*(origImg.width/origImg.height));markCustomDims();updatePrintCalc();updateTechCheck()});
+  idpi.addEventListener('input',()=>{
+    if(activePreset&&activePreset.mm&&!activePreset.dpiOverride){const px=pxForPreset(activePreset);iw.value=px.w;ih.value=px.h}
+    updatePrintCalc();updateTechCheck();
+  });
+  lockBtn.addEventListener('click',()=>{aspLocked=!aspLocked;lockBtn.classList.toggle('on',aspLocked);lockBtn.setAttribute('aria-pressed',aspLocked)});
+  autoBtn.addEventListener('click',()=>{const on=!autoBtn.classList.contains('on');autoBtn.classList.toggle('on',on);autoBtn.setAttribute('aria-pressed',on);if(on){keepBtn.classList.remove('on');keepBtn.setAttribute('aria-pressed',false)}updateTechCheck()});
+  keepBtn.addEventListener('click',()=>{const on=!keepBtn.classList.contains('on');keepBtn.classList.toggle('on',on);keepBtn.setAttribute('aria-pressed',on);if(on){autoBtn.classList.remove('on');autoBtn.setAttribute('aria-pressed',false)}updateTechCheck()});
+
+  function updatePrintCalc(){
+    const w=parseInt(iw.value)||0,h=parseInt(ih.value)||0,dpi=parseInt(idpi.value)||300;
+    $('ed-printw').textContent=(w/dpi).toFixed(2)+'"';
+    $('ed-printh').textContent=(h/dpi).toFixed(2)+'"';
+    $('ed-printdpi').textContent=dpi;
+  }
+  updatePrintCalc();
+
+  // ---- enhancement sliders ----
+  const ENH=[['ed-sharp','ed-sharp-v','%',0],['ed-sharpr','ed-sharpr-v','PX',1],['ed-bright','ed-bright-v','%',100],['ed-contr','ed-contr-v','%',100],['ed-sat','ed-sat-v','%',100]];
+  ENH.forEach(([id,vid,u])=>{$(id).addEventListener('input',()=>{$(vid).textContent=$(id).value+u;updateTechCheck()})});
+  $('ed-enh-reset').addEventListener('click',()=>{ENH.forEach(([id,vid,u,def])=>{$(id).value=def;$(vid).textContent=def+u});updateTechCheck()});
+
+  // ---- format ----
+  $$('.fmt-row .fmt-btn').forEach(b=>{
+    if(!b.closest('#tool-camera'))b.addEventListener('click',()=>{
+      if(b.closest('#tool-edit')){
+        $$('#tool-edit .fmt-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');selFmt=b.dataset.fmt;
+        const isPng=selFmt==='image/png';
+        $('ed-qual-row').style.display=isPng?'none':'block';
+        $('ed-qual-note').style.display=isPng?'block':'none';
+      }
+    });
+  });
+  $('ed-qual').addEventListener('input',()=>{$('ed-qual-v').textContent=$('ed-qual').value+'%'});
+
+  // ---- stage before/after toggle ----
+  $('ed-tab-orig').addEventListener('click',()=>{$('ed-tab-orig').classList.add('on');$('ed-tab-out').classList.remove('on');$('ed-tab-orig').setAttribute('aria-pressed',true);$('ed-tab-out').setAttribute('aria-pressed',false);if(origImg)drawToCanvas(cv,origImg,origImg.width,origImg.height,'#fff')});
+  $('ed-tab-out').addEventListener('click',()=>{$('ed-tab-out').classList.add('on');$('ed-tab-orig').classList.remove('on');$('ed-tab-out').setAttribute('aria-pressed',true);$('ed-tab-orig').setAttribute('aria-pressed',false);
+    if(procBlob){const i=new Image();i.onload=()=>drawToCanvas(cv,i,parseInt(iw.value),parseInt(ih.value),null);i.src=procUrl}
+    else if(origImg)drawToCanvas(cv,origImg,origImg.width,origImg.height,'#fff');
+  });
+
+  // ---- zoom (visual only — canvas already auto-fits; these control a CSS scale for closer inspection) ----
+  let zoomLevel=1;
+  function applyZoom(){cv.style.transform='scale('+zoomLevel+')';$('ed-zoomval').textContent=Math.round(zoomLevel*100)+'%'}
+  $('ed-zoomin').addEventListener('click',()=>{zoomLevel=clamp(zoomLevel+0.25,0.5,3);applyZoom()});
+  $('ed-zoomout').addEventListener('click',()=>{zoomLevel=clamp(zoomLevel-0.25,0.5,3);applyZoom()});
+  $('ed-fit').addEventListener('click',()=>{zoomLevel=1;applyZoom()});
+
+  // ---- load file ----
+  function handleFile(file){
+    hideErr('ed-errbanner');
+    loadImageFile(file).then(({img,file})=>{
+      origImg=img;origFile=file;procBlob=null;if(procUrl)URL.revokeObjectURL(procUrl);procUrl=null;
+      dz.style.display='none';cv.style.display='block';
+      drawToCanvas(cv,img,img.width,img.height,'#fff');
+      $('ed-tab-out').classList.add('on');$('ed-tab-orig').classList.remove('on');
+      processBtn.disabled=false;resetBtn.disabled=false;exportBtn.disabled=true;
+      statusEl.textContent='LOADED '+img.width+'×'+img.height+' · '+fmtBytes(file.size);
+      updateTechCheck();updateReadiness(null);
+    }).catch(err=>showErr('ed-errbanner',null,'ed-err-msg',err));
+  }
+  fileInput.addEventListener('change',e=>{if(e.target.files[0])handleFile(e.target.files[0])});
+  $('ed-browse-btn').addEventListener('click',e=>{e.stopPropagation();fileInput.click()});
+  $('ed-opencam-btn').addEventListener('click',e=>{e.stopPropagation();switchTool('camera')});
+  dz.addEventListener('click',()=>fileInput.click());
+  dz.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileInput.click()}});
+  ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));
+  ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));
+  dz.addEventListener('drop',e=>{if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0])});
+
+  // Called externally by Camera Lab's "Edit This Photo"
+  window.__pfSendToEdit=function(img,file){
+    switchTool('edit');
+    origImg=img;origFile=file;procBlob=null;if(procUrl)URL.revokeObjectURL(procUrl);procUrl=null;
+    dz.style.display='none';cv.style.display='block';
+    drawToCanvas(cv,img,img.width,img.height,'#fff');
+    // Sync the dimension fields to the incoming photo so Process doesn't
+    // silently crop/stretch it into whatever the last-used target was.
+    iw.value=img.width;ih.value=img.height;markCustomDims();updatePrintCalc();
+    processBtn.disabled=false;resetBtn.disabled=false;exportBtn.disabled=true;
+    statusEl.textContent='FROM CAMERA · '+img.width+'×'+img.height;
+    updateTechCheck();updateReadiness(null);
+  };
+
+  // ---- technical check ----
+  function checkRow(state,label,val){
+    const icon=state==='pass'?'ti-circle-check':state==='warn'?'ti-alert-triangle':'ti-alert-circle';
+    return `<div class="check-item ${state}"><i class="ti ${icon}"></i>${label}<span class="cv">${val||''}</span></div>`;
+  }
+  function updateTechCheck(){
+    const w=parseInt(iw.value)||0,h=parseInt(ih.value)||0,dpi=parseInt(idpi.value)||300;
+    const rows=[];
+    rows.push(checkRow(w>0&&h>0?'pass':'act','Dimensions valid',w+'×'+h));
+    rows.push(checkRow(dpi>=72?'pass':'warn','DPI reasonable',dpi+' DPI'));
+    if(activePreset){
+      const px=pxForPreset(activePreset),targetR=px.w/px.h,curR=w/h;
+      rows.push(checkRow(Math.abs(targetR-curR)<0.01?'pass':'warn','Matches preset aspect ratio',activePreset.name));
+    }
+    const autoCrop=autoBtn.classList.contains('on'),keepR=keepBtn.classList.contains('on');
+    rows.push(checkRow(autoCrop||keepR?'pass':'warn','Crop mode set',autoCrop?'Auto center crop':keepR?'Letterbox':'Stretch to fit'));
+    rows.push(checkRow('pass','Format selected',selFmt==='image/jpeg'?'JPG':selFmt==='image/png'?'PNG':'WEBP'));
+    rows.push(checkRow(origImg?'pass':'act','Image loaded',origImg?origImg.width+'×'+origImg.height:'None'));
+    $('ed-checklist').innerHTML=rows.join('');
+  }
+  updateTechCheck();
+
+  // ---- photo readiness (real, computed from actual pixels/values — no fabricated results) ----
+  function updateReadiness(offCanvas){
+    const rows=[];let anyIssue=false;
+    if(!offCanvas){
+      $('ed-ready-pill').className='ready-pill wait';$('ed-ready-pill').innerHTML='<i class="ti ti-clock"></i> AWAITING PROCESS';
+      $('ed-readylist').innerHTML='';return;
+    }
+    const ctx=offCanvas.getContext('2d');
+    const sw=Math.min(200,offCanvas.width),sh=Math.round(sw*offCanvas.height/offCanvas.width);
+    const sc=document.createElement('canvas');sc.width=sw;sc.height=sh;
+    sc.getContext('2d').drawImage(offCanvas,0,0,sw,sh);
+    const d=sc.getContext('2d').getImageData(0,0,sw,sh).data;
+    let sum=0,over=0,under=0;
+    for(let i=0;i<d.length;i+=4){const lum=.299*d[i]+.587*d[i+1]+.114*d[i+2];sum+=lum;if(lum>245)over++;if(lum<10)under++}
+    const avgLum=sum/(d.length/4),pxCount=d.length/4;
+    if(avgLum<60){rows.push(checkRow('warn','Image is quite dark',Math.round(avgLum)+'/255 avg'));anyIssue=true}
+    else rows.push(checkRow('pass','Brightness looks reasonable',Math.round(avgLum)+'/255 avg'));
+    if(over/pxCount>0.35){rows.push(checkRow('warn','Large blown-out (white) areas',Math.round(over/pxCount*100)+'% of frame'));anyIssue=true}
+    else rows.push(checkRow('pass','No major blown-out areas'));
+    const shAmt=parseInt($('ed-sharp').value);
+    if(shAmt>70){rows.push(checkRow('warn','Sharpening is high — may look over-processed',shAmt+'%'));anyIssue=true}
+    else rows.push(checkRow('pass','Sharpening within a safe range',shAmt+'%'));
+    if(cropAreaFraction<0.55){rows.push(checkRow('warn','Auto-crop removed a large part of the photo',Math.round((1-cropAreaFraction)*100)+'% cropped away'));anyIssue=true}
+    else rows.push(checkRow('pass','Crop kept most of the original photo'));
+    const autoCrop=autoBtn.classList.contains('on'),keepR=keepBtn.classList.contains('on');
+    if(!autoCrop&&!keepR){rows.push(checkRow('act','Neither crop mode is on — image will stretch/distort'));anyIssue=true}
+    $('ed-readylist').innerHTML=rows.join('');
+    $('ed-ready-pill').className='ready-pill '+(anyIssue?'wait':'pass');
+    $('ed-ready-pill').innerHTML=anyIssue?'<i class="ti ti-alert-triangle"></i> REVIEW SUGGESTED':'<i class="ti ti-circle-check"></i> READY';
+  }
+
+  // ---- process / export / reset ----
+  processBtn.addEventListener('click',()=>{
+    if(!origImg)return;
+    const w=parseInt(iw.value)||800,h=parseInt(ih.value)||800;
+    const qual=parseFloat($('ed-qual').value)/100;
+    const shAmt=parseFloat($('ed-sharp').value)/100,shRadius=parseFloat($('ed-sharpr').value);
+    const bv=parseFloat($('ed-bright').value)/100,cvv=parseFloat($('ed-contr').value)/100,sv=parseFloat($('ed-sat').value)/100;
+    const autoCrop=autoBtn.classList.contains('on'),keepR=keepBtn.classList.contains('on');
+    let off;
+    runStaged('ed-procov','ed-procstage','ed-stagelist',
+      ['Reading image','Applying crop','Applying dimensions','Applying enhancement','Encoding output','Verifying output'],
+      [
+        async()=>{ off=document.createElement('canvas');off.width=w;off.height=h; },
+        async()=>{
+          const ir=origImg.width/origImg.height,tr=w/h;
+          let sx=0,sy=0,sw2=origImg.width,sh2=origImg.height,dx=0,dy=0,dw=w,dh=h;
+          if(autoCrop){if(ir>tr){sw2=origImg.height*tr;sx=(origImg.width-sw2)/2}else{sh2=origImg.width/tr;sy=(origImg.height-sh2)/2}cropAreaFraction=(sw2*sh2)/(origImg.width*origImg.height)}
+          else if(keepR){const sc2=Math.min(w/origImg.width,h/origImg.height);dw=Math.round(origImg.width*sc2);dh=Math.round(origImg.height*sc2);dx=Math.round((w-dw)/2);dy=Math.round((h-dh)/2);cropAreaFraction=1}
+          else cropAreaFraction=1;
+          const oc=off.getContext('2d');oc.fillStyle=selBg;oc.fillRect(0,0,w,h);
+          // For a large source being scaled down a lot, ctx.drawImage()'s own
+          // resampling is a genuinely expensive synchronous main-thread call.
+          // createImageBitmap() with resize options does that same crop+scale
+          // asynchronously, so it doesn't block the UI thread the way a plain
+          // drawImage() would on a big phone/DSLR-sized photo.
+          if('createImageBitmap' in window && dw>0 && dh>0){
+            try{
+              const bmp=await createImageBitmap(origImg,Math.round(sx),Math.round(sy),Math.round(sw2),Math.round(sh2),{resizeWidth:dw,resizeHeight:dh,resizeQuality:'high'});
+              oc.drawImage(bmp,dx,dy);
+              bmp.close();
+            }catch(err){ oc.drawImage(origImg,sx,sy,sw2,sh2,dx,dy,dw,dh); }
+          } else {
+            oc.drawImage(origImg,sx,sy,sw2,sh2,dx,dy,dw,dh);
+          }
+        },
+        async()=>{ /* dimensions already applied above via canvas size + draw */ },
+        async()=>{
+          if((bv!==1||cvv!==1||sv!==1||shAmt>0)&&w<=8000&&h<=8000){
+            const oc=off.getContext('2d');const id=oc.getImageData(0,0,w,h);
+            const resultBuf=await runOnWorker('adjustSharpen',{bv,cv:cvv,sv,shAmt,shRadius},id.data.buffer,w,h);
+            oc.putImageData(new ImageData(new Uint8ClampedArray(resultBuf),w,h),0,0);
+          }
+        },
+        async()=>{
+          procBlob=await new Promise(res=>off.toBlob(res,selFmt,qual));
+          if(procUrl)URL.revokeObjectURL(procUrl);procUrl=URL.createObjectURL(procBlob);
+        },
+        async()=>{
+          drawToCanvas(cv,off,w,h,null);
+          $('ed-tab-out').classList.add('on');$('ed-tab-orig').classList.remove('on');
+          const fl=selFmt==='image/jpeg'?'JPG':selFmt==='image/png'?'PNG':'WEBP';
+          $('ed-out-size').textContent=fmtBytes(procBlob.size);
+          $('ed-out-dims').textContent=w+'×'+h;
+          $('ed-out-fmt').textContent=fl;
+          $('ed-out-print').textContent=(w/(parseInt(idpi.value)||300)).toFixed(2)+'"×'+(h/(parseInt(idpi.value)||300)).toFixed(2)+'"';
+          exportBtn.disabled=false;
+          statusEl.textContent='PROCESSED '+w+'×'+h+' · '+fmtBytes(procBlob.size);
+          updateTechCheck();updateReadiness(off);
+        },
+      ]
+    );
+  });
+
+  exportBtn.addEventListener('click',()=>{
+    if(!procUrl)return;
+    const ext=selFmt==='image/jpeg'?'jpg':selFmt==='image/png'?'png':'webp';
+    const name='pixelfixpro_'+Date.now()+'.'+ext;
+    const a=document.createElement('a');a.href=procUrl;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    showToast('EXPORTED · TECHNICAL CHECK PASSED',iw.value+'×'+ih.value+' · '+(selFmt==='image/jpeg'?'JPG':selFmt==='image/png'?'PNG':'WEBP')+' · '+idpi.value+' DPI · '+fmtBytes(procBlob.size));
+  });
+
+  resetBtn.addEventListener('click',()=>{
+    askReset(()=>{
+      origImg=null;origFile=null;procBlob=null;if(procUrl)URL.revokeObjectURL(procUrl);procUrl=null;activePreset=null;
+      cv.style.display='none';dz.style.display='flex';fileInput.value='';
+      processBtn.disabled=true;exportBtn.disabled=true;resetBtn.disabled=true;
+      statusEl.textContent='';hideErr('ed-errbanner');
+      $$('#ed-presets .preset-tile').forEach(x=>x.classList.remove('on'));
+      $('ed-out-size').textContent='—';$('ed-out-dims').textContent='—';$('ed-out-fmt').textContent='—';$('ed-out-print').textContent='—';
+      updateTechCheck();updateReadiness(null);
+    });
+  });
+
+  window.__pfEditOrigImg=()=>origImg;
+})();
+
+/* ══════════════════════════════════════════════════════════
+   BACKGROUND LAB
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  let bgImg=null,bgOutBlob=null,bgOutUrl=null,bgMode='transparent',bgCustomColor='#1E3A6E';
+  const cv=$('bg-canvas'),dz=$('bg-dropzone'),fileInput=$('bg-file');
+  const processBtn=$('bg-process'),exportBtn=$('bg-export'),resetBtn=$('bg-reset');
+
+  $('bg-thresh').addEventListener('input',()=>$('bg-thresh-v').textContent=$('bg-thresh').value);
+  $('bg-feather').addEventListener('input',()=>$('bg-feather-v').textContent=$('bg-feather').value+'PX');
+
+  $$('.bg-opt[data-bgmode]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      $$('.bg-opt[data-bgmode]').forEach(x=>x.classList.remove('on'));b.classList.add('on');bgMode=b.dataset.bgmode;
+    });
+  });
+  $('bg-custom-color').addEventListener('input',e=>{
+    bgCustomColor=e.target.value;
+    $$('.bg-opt[data-bgmode]').forEach(x=>x.classList.remove('on'));
+    document.querySelector('.bg-opt[data-bgmode="custom"]').classList.add('on');bgMode='custom';
+  });
+
+  function handleFile(file){
+    hideErr('bg-errbanner');
+    loadImageFile(file).then(({img})=>{
+      bgImg=img;bgOutBlob=null;if(bgOutUrl)URL.revokeObjectURL(bgOutUrl);bgOutUrl=null;
+      dz.style.display='none';drawToCanvas(cv,img,img.width,img.height,'#222');
+      processBtn.disabled=false;resetBtn.disabled=false;exportBtn.disabled=true;
+      $('bg-out-size').textContent='—';$('bg-out-dims').textContent=img.width+'×'+img.height;
+    }).catch(err=>showErr('bg-errbanner',null,'bg-err-msg',err));
+  }
+  fileInput.addEventListener('change',e=>{if(e.target.files[0])handleFile(e.target.files[0])});
+  $('bg-browse-btn').addEventListener('click',e=>{e.stopPropagation();fileInput.click()});
+  dz.addEventListener('click',()=>fileInput.click());
+  dz.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileInput.click()}});
+  ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));
+  ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));
+  dz.addEventListener('drop',e=>{if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0])});
+
+  $('bg-tab-orig').addEventListener('click',()=>{$('bg-tab-orig').classList.add('on');$('bg-tab-out').classList.remove('on');if(bgImg)drawToCanvas(cv,bgImg,bgImg.width,bgImg.height,'#222')});
+  $('bg-tab-out').addEventListener('click',()=>{$('bg-tab-out').classList.add('on');$('bg-tab-orig').classList.remove('on');
+    if(bgOutUrl){const i=new Image();i.onload=()=>drawToCanvas(cv,i,i.width,i.height,null);i.src=bgOutUrl}
+    else if(bgImg)drawToCanvas(cv,bgImg,bgImg.width,bgImg.height,'#222');
+  });
+
+  processBtn.addEventListener('click',()=>{
+    if(!bgImg)return;
+    const W=bgImg.width,H=bgImg.height;
+    const thresh=parseInt($('bg-thresh').value),feather=parseInt($('bg-feather').value);
+    let cutout;
+    runStaged('bg-procov','bg-procstage',null,
+      ['Sampling edge colours','Removing background','Compositing new background','Encoding output'],
+      [
+        async()=>{},
+        async()=>{
+          cutout=document.createElement('canvas');cutout.width=W;cutout.height=H;
+          const oc=cutout.getContext('2d');oc.drawImage(bgImg,0,0);
+          const id=oc.getImageData(0,0,W,H);
+          const pts=[];for(let x=0;x<W;x+=Math.max(1,Math.floor(W/30))){pts.push([x,0]);pts.push([x,H-1])}for(let y=0;y<H;y+=Math.max(1,Math.floor(H/30))){pts.push([0,y]);pts.push([W-1,y])}
+          const flat=id.data;const ptsFlat=new Float32Array(pts.length*3);
+          pts.forEach(([px,py],i)=>{const idx=(py*W+px)*4;ptsFlat[i*3]=flat[idx];ptsFlat[i*3+1]=flat[idx+1];ptsFlat[i*3+2]=flat[idx+2]});
+          const resultBuf=await runOnWorker('bgremove',{thresh,pts:ptsFlat,feather},id.data.buffer,W,H);
+          oc.putImageData(new ImageData(new Uint8ClampedArray(resultBuf),W,H),0,0);
+        },
+        async()=>{
+          const res=document.createElement('canvas');res.width=W;res.height=H;const rc=res.getContext('2d');
+          if(bgMode==='white')rc.fillStyle='#ffffff';else if(bgMode==='black')rc.fillStyle='#000000';else if(bgMode==='custom')rc.fillStyle=bgCustomColor;
+          if(bgMode!=='transparent'){rc.fillRect(0,0,W,H)}
+          rc.drawImage(cutout,0,0);
+          cutout=res;
+        },
+        async()=>{
+          if(bgOutUrl)URL.revokeObjectURL(bgOutUrl);
+          bgOutBlob=await new Promise(res=>cutout.toBlob(res,'image/png'));
+          bgOutUrl=URL.createObjectURL(bgOutBlob);
+          drawToCanvas(cv,cutout,W,H,null);
+          $('bg-tab-out').classList.add('on');$('bg-tab-orig').classList.remove('on');
+          $('bg-out-size').textContent=fmtBytes(bgOutBlob.size);$('bg-out-dims').textContent=W+'×'+H;
+          exportBtn.disabled=false;
+        },
+      ]
+    );
+  });
+
+  exportBtn.addEventListener('click',()=>{
+    if(!bgOutUrl)return;
+    const name='pixelfixpro_nobg_'+Date.now()+'.png';
+    const a=document.createElement('a');a.href=bgOutUrl;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    showToast('EXPORTED · BACKGROUND REMOVED',$('bg-out-dims').textContent+' · PNG · '+$('bg-out-size').textContent);
+  });
+
+  resetBtn.addEventListener('click',()=>{
+    askReset(()=>{
+      bgImg=null;bgOutBlob=null;if(bgOutUrl)URL.revokeObjectURL(bgOutUrl);bgOutUrl=null;
+      cv.style.display='none';dz.style.display='flex';fileInput.value='';
+      processBtn.disabled=true;exportBtn.disabled=true;resetBtn.disabled=true;hideErr('bg-errbanner');
+      $('bg-out-size').textContent='—';$('bg-out-dims').textContent='—';
+    });
+  });
+})();
+
+/* ══════════════════════════════════════════════════════════
+   CAMERA LAB
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  let stream=null,facing='user',mirrored=false,activeFilter='none',snapped=null,snappedBlob=null,snappedUrl=null;
+  const video=$('cam-video'),canvas=$('cam-canvas'),startzone=$('cam-startzone');
+  const startBtn=$('cam-start-btn'),snapBtn=$('cam-snap-btn'),retakeBtn=$('cam-retake-btn'),stopBtn=$('cam-stop-btn');
+  const saveBtn=$('cam-save-btn'),sendBtn=$('cam-send-btn'),switchBtn=$('cam-switch-btn');
+
+  const CAM_PRESETS=[
+    {id:'said',name:'SA ID / Passport',mm:[35,45],tag:'35×45mm'},
+    {id:'visa',name:'Visa (Embassy)',mm:[35,45],dpiOverride:600,tag:'35×45mm @600dpi'},
+    {id:'square',name:'Square',w:800,h:800,tag:'800×800'},
+    {id:'native',name:'Native',w:0,h:0,tag:'Original'},
+  ];
+  let camTargetW=800,camTargetH=800;
+  $('cam-presets').innerHTML=CAM_PRESETS.map(p=>`<button class="preset-tile" data-id="${p.id}" type="button"><span class="pt-name">${p.name}</span><span class="pt-spec">${p.tag}</span></button>`).join('');
+  $$('#cam-presets .preset-tile').forEach((t,i)=>{
+    if(i===2)t.classList.add('on');
+    t.addEventListener('click',()=>{
+      $$('#cam-presets .preset-tile').forEach(x=>x.classList.remove('on'));t.classList.add('on');
+      const p=CAM_PRESETS.find(x=>x.id===t.dataset.id);
+      if(p.mm){const dpi=p.dpiOverride||300;camTargetW=Math.round(p.mm[0]/25.4*dpi);camTargetH=Math.round(p.mm[1]/25.4*dpi)}
+      else{camTargetW=p.w;camTargetH=p.h}
+    });
+  });
+
+  function getFilterStr(){
+    const b=$('cam-bright').value,c=$('cam-contr').value,s=$('cam-sat').value;
+    let f=`brightness(${b}%) contrast(${c}%) saturate(${s}%)`;
+    if(activeFilter!=='none')f=activeFilter+' '+f;
+    return f;
+  }
+  function applyLiveFilter(){video.style.filter=getFilterStr()}
+  ['cam-bright','cam-contr','cam-sat'].forEach(id=>{
+    $(id).addEventListener('input',()=>{$(id+'-v').textContent=$(id).value+'%';applyLiveFilter()});
+  });
+  $$('#cam-filters .filt-btn').forEach(b=>{
+    b.addEventListener('click',()=>{$$('#cam-filters .filt-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');activeFilter=b.dataset.f;applyLiveFilter()});
+  });
+
+  $('cam-guide-toggle').addEventListener('click',function(){const on=!this.classList.contains('on');this.classList.toggle('on',on);this.setAttribute('aria-pressed',on);$('cam-guides').classList.toggle('on',on)});
+  $('cam-mirror-toggle').addEventListener('click',function(){mirrored=!mirrored;this.classList.toggle('on',mirrored);this.setAttribute('aria-pressed',mirrored);video.style.transform=mirrored?'scaleX(-1)':'none'});
+
+  async function startCamera(useFacing){
+    hideErr('cam-errbanner');
+    try{
+      if(stream)stream.getTracks().forEach(t=>t.stop());
+      stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:useFacing},audio:false});
+      video.srcObject=stream;video.style.display='block';startzone.style.display='none';
+      applyLiveFilter();
+      snapBtn.disabled=false;stopBtn.disabled=false;retakeBtn.disabled=true;saveBtn.disabled=true;sendBtn.disabled=true;
+      canvas.style.display='none';
+      // Only show the front/rear switch if the device genuinely has more than one camera
+      if(navigator.mediaDevices.enumerateDevices){
+        const devices=await navigator.mediaDevices.enumerateDevices();
+        const cams=devices.filter(d=>d.kind==='videoinput');
+        switchBtn.style.display=cams.length>1?'flex':'none';
+      }
+    }catch(err){
+      let msg='PixelFix could not access your camera.';
+      if(err.name==='NotAllowedError')msg='Camera permission was denied. Allow camera access in your browser settings and try again.';
+      else if(err.name==='NotFoundError')msg='No camera was found on this device.';
+      else if(err.name==='NotReadableError')msg='Your camera is already in use by another app.';
+      else if(err.name==='OverconstrainedError')msg='This device does not support that camera. Try the other camera.';
+      showErr('cam-errbanner',null,'cam-err-msg',{msg});
+    }
+  }
+  startBtn.addEventListener('click',()=>startCamera(facing));
+  switchBtn.addEventListener('click',()=>{facing=facing==='user'?'environment':'user';startCamera(facing)});
+  stopBtn.addEventListener('click',()=>{
+    if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;
+    video.style.display='none';canvas.style.display='none';startzone.style.display='flex';
+    snapBtn.disabled=true;retakeBtn.disabled=true;stopBtn.disabled=true;saveBtn.disabled=true;sendBtn.disabled=true;
+  });
+
+  snapBtn.addEventListener('click',()=>{
+    const vw=video.videoWidth,vh=video.videoHeight;
+    if(!vw||!vh)return;
+    const tw=camTargetW||vw,th=camTargetH||vh;
+    canvas.width=tw;canvas.height=th;
+    const ctx=canvas.getContext('2d');
+    ctx.filter=getFilterStr();
+    if(mirrored){ctx.translate(tw,0);ctx.scale(-1,1)}
+    const vr=vw/vh,tr=tw/th;
+    let sx=0,sy=0,sw2=vw,sh2=vh;
+    if(vr>tr){sw2=vh*tr;sx=(vw-sw2)/2}else{sh2=vw/tr;sy=(vh-sh2)/2}
+    ctx.drawImage(video,sx,sy,sw2,sh2,0,0,tw,th);
+    ctx.setTransform(1,0,0,1,0,0);
+    video.style.display='none';canvas.style.display='block';
+    retakeBtn.disabled=false;saveBtn.disabled=false;sendBtn.disabled=false;snapBtn.disabled=true;
+    canvas.toBlob(b=>{snappedBlob=b;if(snappedUrl)URL.revokeObjectURL(snappedUrl);snappedUrl=URL.createObjectURL(b)},'image/jpeg',0.92);
+  });
+
+  retakeBtn.addEventListener('click',()=>{
+    video.style.display='block';canvas.style.display='none';
+    retakeBtn.disabled=true;saveBtn.disabled=true;sendBtn.disabled=true;snapBtn.disabled=false;
+  });
+
+  saveBtn.addEventListener('click',()=>{
+    if(!snappedUrl)return;
+    const name='pixelfixpro_camera_'+Date.now()+'.jpg';
+    const a=document.createElement('a');a.href=snappedUrl;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    showToast('EXPORTED · PHOTO SAVED',canvas.width+'×'+canvas.height+' · JPG');
+  });
+
+  sendBtn.addEventListener('click',()=>{
+    if(!snappedBlob)return;
+    const img=new Image();
+    img.onload=()=>{window.__pfSendToEdit(img,new File([snappedBlob],'camera.jpg',{type:'image/jpeg'}))};
+    img.src=URL.createObjectURL(snappedBlob);
+  });
+})();
+</script></html>
